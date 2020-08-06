@@ -1,3 +1,27 @@
+############
+set -ex
+rm -rf HPCToolkit
+mkdir HPCToolkit
+cd HPCToolkit
+git clone https://github.com/HPCToolkit/hpctoolkit.git hpctoolkit &
+git clone https://github.com/HPCToolkit/hpctoolkit-externals.git hpctoolkit-externals &
+wait
+loc=`pwd`
+cd $loc
+cd hpctoolkit-externals
+mkdir BUILD
+cd BUILD
+../configure --prefix=$loc/hpctoolkit-externals-install
+make install -j
+cd $loc/hpctoolkit
+mkdir BUILD
+cd BUILD
+../configure --prefix=$loc/hpctoolkit-install --with-externals=$loc/hpctoolkit-externals-install --enable-mpi CC=gcc CXX=g++ MPICC=<YOUR MPICC> MPICXX=<YOUR MPICXX>
+ make install -j
+echo 'USE HPCToolkit binaries from' $loc'/hpctoolkit-install, I suggest you put that in your PATH variable'
+############
+
+
 $Id$
 
 =============================================================================
